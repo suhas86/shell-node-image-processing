@@ -11,9 +11,15 @@ describe('Images API', () => {
       const response = await request(app).get('/api/images?filename=test');
       expect(response.status).toBe(404);
     });
-    it('should be valid width and height', async () => {
+    it('should be numerical width and height', async () => {
       const response = await request(app).get(
         '/api/images?filename=test&width=a&height=b'
+      );
+      expect(response.status).toBe(400);
+    });
+    it('should be positive width and height', async () => {
+      const response = await request(app).get(
+        '/api/images?filename=fjord&width=-200&height=-200'
       );
       expect(response.status).toBe(400);
     });

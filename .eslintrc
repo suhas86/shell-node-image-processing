@@ -13,6 +13,7 @@
     "no-var": "error",
     "prefer-const": "error"
   },
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaVersion": 2017
   },
