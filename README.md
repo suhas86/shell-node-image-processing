@@ -13,3 +13,7 @@ This project includes a simple api which allows you to place images into your fr
 - To run unit tests `npm run test`
 - To run the application locally `npm start`
 - To build the application `npm run build`
+
+### Sample api to test
+
+http://localhost:3000/api/images?filename=fjord&height=400&width=400
