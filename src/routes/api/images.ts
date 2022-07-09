@@ -2,36 +2,20 @@ import express from 'express';
 import { promises as fs } from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import { doesExists, getImageWidthAndHeight } from '../../utils/imageHelper';
+import imageQueryValidator from '../../middleware/imageQueryValidator';
+import { doesExists } from '../../utils/imageHelper';
 
 const images = express.Router();
 export const imagesDir = 'images/';
 export const compressedDir = 'compressed';
 export const extension = '.jpg';
 
-images.get('/', async (req, res) => {
+images.get('/', imageQueryValidator, async (req, res) => {
   const { filename, width, height } = req.query;
-
-  // If file name not provided return 400
-  if (!filename) {
-    res.status(400).send('Filename is required');
-    return;
-  }
-
-  // If width and height are providded and are numbers, then we can proceed
-  if (height && width && isNaN(Number(width)) && isNaN(Number(height))) {
-    res.status(400).send('Width and height must be numbers');
-    return;
-  }
-  // If width and height are provided and are positive numbers, then we can proceed
-  if ((height && width && Number(width) < 0) || Number(height) < 0) {
-    res.status(400).send('Width and height must be positive');
-    return;
-  }
   try {
     const compressedImagePath = `${path.resolve(
       __dirname,
-      `../../../${compressedDir}/${filename}${extension}`
+      `../../../${compressedDir}/${filename}-${width}-${height}${extension}`
     )}`;
     const imagePath = `${path.resolve(
       __dirname,
@@ -48,12 +32,8 @@ images.get('/', async (req, res) => {
     }
     // Get image from cache or from disk
     if (await doesExists(compressedImagePath)) {
-      const { existingImageHeight, existingImageWidth } =
-        await getImageWidthAndHeight(compressedImagePath);
-      if (existingImageWidth == width && existingImageHeight == height) {
-        res.sendFile(compressedImagePath);
-        return;
-      }
+      res.sendFile(compressedImagePath);
+      return;
     }
 
     const inputBuffer = await fs.readFile(imagePath);

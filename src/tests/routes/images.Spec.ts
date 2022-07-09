@@ -32,7 +32,7 @@ describe('Images API', () => {
       await request(app).get('/api/images?filename=fjord&width=200&height=200');
       const imagePath = `${path.resolve(
         __dirname,
-        `../../../${compressedDir}/fjord${extension}`
+        `../../../${compressedDir}/fjord-200-200${extension}`
       )}`;
       const { existingImageHeight, existingImageWidth } =
         await getImageWidthAndHeight(imagePath);
