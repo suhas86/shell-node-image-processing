@@ -2,15 +2,12 @@ import express from 'express';
 import { promises as fs } from 'fs';
 import path from 'path';
 import sharp from 'sharp';
-import {
-  doesExists,
-  getCompessedImageWidthAndHeight
-} from '../../utils/imageHelper';
+import { doesExists, getImageWidthAndHeight } from '../../utils/imageHelper';
 
 const images = express.Router();
-const imagesDir = 'images/';
-const compressedDir = 'compressed';
-const extension = '.jpg';
+export const imagesDir = 'images/';
+export const compressedDir = 'compressed';
+export const extension = '.jpg';
 
 images.get('/', async (req, res) => {
   const { filename, width, height } = req.query;
@@ -52,7 +49,7 @@ images.get('/', async (req, res) => {
     // Get image from cache or from disk
     if (await doesExists(compressedImagePath)) {
       const { existingImageHeight, existingImageWidth } =
-        await getCompessedImageWidthAndHeight(compressedImagePath);
+        await getImageWidthAndHeight(compressedImagePath);
       if (existingImageWidth == width && existingImageHeight == height) {
         res.sendFile(compressedImagePath);
         return;

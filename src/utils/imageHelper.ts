@@ -10,17 +10,17 @@ export const doesExists = async (path: string): Promise<boolean> => {
   }
 };
 
-export const getCompessedImageWidthAndHeight = async (
-  compressedImagePath: string
+export const getImageWidthAndHeight = async (
+  imagePath: string
 ): Promise<{
   existingImageWidth: number | undefined;
   existingImageHeight: number | undefined;
 }> => {
-  const compressedImageBuffer = await fs.readFile(compressedImagePath);
-  const compressedImage = await sharp(compressedImageBuffer);
-  const compressedImageMeta = await compressedImage.metadata();
+  const imageBuffer = await fs.readFile(imagePath);
+  const image = await sharp(imageBuffer);
+  const imageMeta = await image.metadata();
   return {
-    existingImageWidth: compressedImageMeta.width,
-    existingImageHeight: compressedImageMeta.height
+    existingImageWidth: imageMeta.width,
+    existingImageHeight: imageMeta.height
   };
 };
