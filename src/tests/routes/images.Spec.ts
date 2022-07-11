@@ -1,8 +1,11 @@
 import path from 'path';
 import request from 'supertest';
 import { app } from '../../index';
-import { compressedDir, extension } from '../../routes/api/images';
-import { getImageWidthAndHeight } from '../../utils/imageHelper';
+import { compressedDir, extension, imagesDir } from '../../routes/api/images';
+import {
+  getImageWidthAndHeight,
+  transformImage
+} from '../../utils/imageHelper';
 
 describe('Images API', () => {
   describe('Validate api request', () => {
@@ -42,6 +45,19 @@ describe('Images API', () => {
     it('Should return original image if no width and height is provided', async () => {
       const response = await request(app).get('/api/images?filename=fjord');
       expect(response.status).toBe(200);
+    });
+    it('Should transform image to compressed image', () => {
+      const imagePath = `${path.resolve(
+        __dirname,
+        `../../../${imagesDir}/fjord${extension}`
+      )}`;
+      const compressedImagePath = `${path.resolve(
+        __dirname,
+        `../../../${compressedDir}/fjord-200-200${extension}`
+      )}`;
+      expect(async () => {
+        await transformImage(imagePath, 200, 200, compressedImagePath);
+      }).not.toThrow();
     });
   });
 });

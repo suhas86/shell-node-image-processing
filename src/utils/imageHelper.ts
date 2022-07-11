@@ -24,3 +24,12 @@ export const getImageWidthAndHeight = async (
     existingImageHeight: imageMeta.height
   };
 };
+
+export const transformImage = (
+  imagePath: string,
+  width: number,
+  height: number,
+  compressedImagePath: string
+): Promise<sharp.OutputInfo> => {
+  return sharp(imagePath).resize(width, height).toFile(compressedImagePath);
+};
